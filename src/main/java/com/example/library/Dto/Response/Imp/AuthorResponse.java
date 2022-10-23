@@ -4,9 +4,11 @@ import com.example.library.Dto.Response.Response;
 import lombok.Data;
 
 @Data
-public class AuthResponse implements Response {
+public class AuthorResponse implements Response {
 
     private Long id;
 
-    private String token;
+    private String nameAuthor;
+
+    private String surnameAuthor;
 }

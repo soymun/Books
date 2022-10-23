@@ -88,4 +88,32 @@ public class UserServiceImp implements UserService {
         log.info("User saved");
         return userDtoMapper.userToUserDto(userRepository.save(user));
     }
+
+    @Override
+    public UserDto getUserProfile(Long id) {
+        if(id == null){
+            log.debug("User with email{}, not found", id);
+            throw new BadValues("Email, not validity");
+        }
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserDto> cq = cb.createQuery(UserDto.class);
+        Root<User> root = cq.from(User.class);
+
+        cq.where(cb.equal(root.get(User_.ID), id));
+
+        cq.multiselect(
+                root.get(User_.ID),
+                root.get(User_.USERNAME),
+                root.get(User_.EMAIL)
+        );
+        log.info("Email selected");
+        return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        log.info("Delete user");
+        userRepository.deleteById(id);
+        log.info("User deleted");
+    }
 }

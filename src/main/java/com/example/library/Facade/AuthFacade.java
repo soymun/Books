@@ -1,5 +1,6 @@
 package com.example.library.Facade;
 
+import com.example.library.Dto.Response.FactoryResponse.FactoryResponse;
 import com.example.library.Dto.Response.Imp.AuthResponse;
 import com.example.library.Dto.Response.Imp.Registration;
 import com.example.library.Dto.Response.ResponseDto;
@@ -37,12 +38,15 @@ public class AuthFacade {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final FactoryResponse factoryResponse;
+
     @Autowired
-    public AuthFacade(UserServiceImp userServiceImp, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public AuthFacade(UserServiceImp userServiceImp, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, FactoryResponse factoryResponse) {
         this.userServiceImp = userServiceImp;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.factoryResponse = factoryResponse;
     }
 
     public ResponseEntity<?> registration(RegistrationFto registrationFto){
@@ -59,10 +63,7 @@ public class AuthFacade {
 
         userServiceImp.saveUser(user);
         log.info("User created");
-        ResponseDto responseDto = new ResponseDto();
-        Registration registration = new Registration();
-        registration.setMessage("User save, performed");
-        responseDto.setResponse(registration);
+        ResponseDto responseDto = factoryResponse.getResponse("User save, performed");
         log.info("Response created");
         return ResponseEntity.ok(responseDto);
     }
@@ -78,11 +79,7 @@ public class AuthFacade {
             log.info("User authentication");
             String token = jwtTokenProvider.getToken(user.getEmail(), user.getRole());
             log.info("Token created");
-            ResponseDto responseDto = new ResponseDto();
-            AuthResponse authResponse = new AuthResponse();
-            authResponse.setId(user.getId());
-            authResponse.setToken(token);
-            responseDto.setResponse(authResponse);
+            ResponseDto responseDto = factoryResponse.getResponse(user.getId(), token);
             log.info("Response created");
             return ResponseEntity.ok(responseDto);
         }
@@ -95,5 +92,19 @@ public class AuthFacade {
         log.info("User logout");
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
+    }
+
+    public ResponseEntity<?> createAuthor(String email){
+        if(email.isEmpty()){
+            log.debug("User can't find");
+            throw new BadValues("Email is invalid");
+        }
+
+        log.info("User is author started");
+        User user = userServiceImp.getUser(email);
+        user.setRole(Role.AUTHOR);
+        log.info("User is author");
+        ResponseDto responseDto = factoryResponse.getResponse(userServiceImp.saveUser(user));
+        return ResponseEntity.ok(responseDto);
     }
 }

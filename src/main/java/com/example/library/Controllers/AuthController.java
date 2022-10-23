@@ -50,4 +50,10 @@ public class AuthController {
         authFacade.logout(request, response);
         log.info("Logout closed");
     }
+
+    @PostMapping("/user/author")
+    public ResponseEntity<?> stateAuthor(@RequestBody String email){
+        log.info("User author start");
+        return authFacade.createAuthor(email);
+    }
 }

@@ -11,4 +11,8 @@ public interface UserService extends UserDetailsService {
     boolean findEmail(String email);
 
     UserDto saveUser(User user);
+
+    UserDto getUserProfile(Long id);
+
+    void deleteUser(Long id);
 }

@@ -4,7 +4,11 @@ import com.example.library.Dto.Response.Response;
 import lombok.Data;
 
 @Data
-public class Registration implements Response {
+public class ProfileDto implements Response {
 
-    private String message;
+    private Long id;
+
+    private String email;
+
+    private String username;
 }
