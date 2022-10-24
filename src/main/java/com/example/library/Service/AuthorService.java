@@ -1,7 +1,7 @@
 package com.example.library.Service;
 
-import com.example.library.Dto.Response.Author.AuthorCreateUpdateDto;
-import com.example.library.Dto.Response.Author.AuthorDto;
+import com.example.library.Dto.Author.AuthorCreateUpdateDto;
+import com.example.library.Dto.Author.AuthorDto;
 
 import java.util.List;
 

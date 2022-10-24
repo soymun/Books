@@ -1,8 +1,11 @@
 package com.example.library.Entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 public class Book {
 
     @Id

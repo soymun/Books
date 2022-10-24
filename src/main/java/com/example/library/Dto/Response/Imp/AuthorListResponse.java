@@ -1,6 +1,6 @@
 package com.example.library.Dto.Response.Imp;
 
-import com.example.library.Dto.Response.Author.AuthorDto;
+import com.example.library.Dto.Author.AuthorDto;
 import com.example.library.Dto.Response.Response;
 import lombok.Data;
 

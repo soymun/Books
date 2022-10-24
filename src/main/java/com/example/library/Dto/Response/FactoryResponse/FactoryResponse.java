@@ -1,7 +1,8 @@
 package com.example.library.Dto.Response.FactoryResponse;
 
+import com.example.library.Dto.Book.BookDto;
 import com.example.library.Dto.MapObject.UserDto;
-import com.example.library.Dto.Response.Author.AuthorDto;
+import com.example.library.Dto.Author.AuthorDto;
 import com.example.library.Dto.Response.Imp.*;
 import com.example.library.Dto.Response.ResponseDto;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,19 @@ public class FactoryResponse {
         AuthorListResponse authorResponse = new AuthorListResponse();
         authorResponse.setAuthorDtos(authorDto);
         responseDto.setResponse(authorResponse);
+        return responseDto;
+    }
+
+    public ResponseDto getResponse(BookDto bookDto){
+        ResponseDto responseDto = new ResponseDto();
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setId(bookDto.getId());
+        bookResponse.setName(bookDto.getName());
+        bookResponse.setAuthorName(bookDto.getAuthorName());
+        bookResponse.setAuthorSurname(bookDto.getAuthorSurname());
+        bookResponse.setAbout(bookDto.getAbout());
+        bookResponse.setPrice(bookDto.getPrice());
+        responseDto.setResponse(bookResponse);
         return responseDto;
     }
 }

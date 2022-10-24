@@ -1,13 +1,12 @@
-package com.example.library.Dto.Response.Author;
+package com.example.library.Dto.Author;
+
 
 import lombok.Data;
 
 @Data
-public class AuthorCreateUpdateDto {
+public class AuthorDto {
 
     private Long id;
-
-    private Long userAuthorId;
 
     private String nameAuthor;
 
