@@ -30,11 +30,10 @@ public class BookController {
     }
 
     @GetMapping("/book/{id}")
-    public ResponseEntity<?> getBook(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) throws IOException {
+    public void getBook(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) throws IOException {
         log.info("Get file with id");
         BookDto bookDto = bookFacade.getBook(id);
-        String url = "D:\\Users\\rcfef\\Library\\src\\main\\resources\\books\\";
-        File file = new File(url + bookDto.getUrlToPdf());
+        File file = new File(bookDto.getUrlToPdf());
         String mimeType = URLConnection.guessContentTypeFromName(file.getName());
         response.setContentType(mimeType);
 
@@ -45,12 +44,19 @@ public class BookController {
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 
         FileCopyUtils.copy(inputStream, response.getOutputStream());
-
-        return ResponseEntity.ok(factoryResponse.getResponse(bookDto));
     }
 
     @PostMapping("/book")
-    public ResponseEntity<?> saveBook(@RequestBody BookDtoSave bookDtoSave, MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> saveBook(@RequestParam Long authorId,
+                                      @RequestParam String name,
+                                      @RequestParam String about,
+                                      @RequestParam Long price,
+                                      @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        BookDtoSave bookDtoSave = new BookDtoSave();
+        bookDtoSave.setAuthorId(authorId);
+        bookDtoSave.setName(name);
+        bookDtoSave.setAbout(about);
+        bookDtoSave.setPrice(price);
         log.info("Save book with bookdtosave and multipart");
         return bookFacade.saveBook(bookDtoSave, multipartFile);
     }

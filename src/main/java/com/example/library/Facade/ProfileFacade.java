@@ -47,7 +47,7 @@ public class ProfileFacade {
             log.debug("User is null");
             throw new BadValues("This profile, can't find");
         }
-        UserDto user = userServiceImp.getUserProfile(userDto.getId());
+        User user = userServiceImp.getUserById(userDto.getId());
         if(user == null){
             log.debug("User with id {}, not found", userDto.getId());
             throw new NotFoundException("User with id not found");
@@ -57,6 +57,8 @@ public class ProfileFacade {
         userUpdate.setId(userDto.getId());
         userUpdate.setEmail(userDto.getEmail());
         userUpdate.setUsername(userDto.getUsername());
+        userUpdate.setRole(user.getRole());
+        userUpdate.setPassword(user.getPassword());
         UserDto userSaved = userServiceImp.saveUser(userUpdate);
         ResponseDto responseDto = factoryResponse.getResponse(userSaved);
         log.info("User update end");

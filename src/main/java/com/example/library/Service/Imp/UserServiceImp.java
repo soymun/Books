@@ -45,7 +45,7 @@ public class UserServiceImp implements UserService {
         }
         User user = userRepository.getUserByEmail(username).orElseThrow(() -> new NotFoundException("User, with this id, not found"));
         log.info("UserDetails created");
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRole().getAuthorities());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.getRole().getAuthorities());
     }
 
     @Override
@@ -115,5 +115,15 @@ public class UserServiceImp implements UserService {
         log.info("Delete user");
         userRepository.deleteById(id);
         log.info("User deleted");
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        if(id == null){
+            log.debug("User with email{}, not found", id);
+            throw new BadValues("Email, not validity");
+        }
+        log.info("User selected");
+        return userRepository.getUserById(id).orElseThrow(() -> new NotFoundException("User with this id not found"));
     }
 }

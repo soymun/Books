@@ -75,7 +75,8 @@ public class AuthFacade {
                 log.info("User with email {}, not found", authenticationDto.getEmail());
                 throw new NotFoundException("User with this id, not found");
             }
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationDto.getEmail(), authenticationDto.getPassword()));
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(authenticationDto.getEmail(), authenticationDto.getPassword());
+            authenticationManager.authenticate(authenticationToken);
             log.info("User authentication");
             String token = jwtTokenProvider.getToken(user.getEmail(), user.getRole());
             log.info("Token created");
@@ -84,7 +85,7 @@ public class AuthFacade {
             return ResponseEntity.ok(responseDto);
         }
         catch (AuthenticationException e){
-            throw new BadValues("");
+            throw new BadValues(e.getMessage());
         }
     }
 

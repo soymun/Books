@@ -1,6 +1,7 @@
 package com.example.library.Controllers;
 
 
+import com.example.library.Dto.Author.CreateUserAuthor;
 import com.example.library.Dto.User.AuthenticationDto;
 import com.example.library.Dto.User.RegistrationFto;
 import com.example.library.Facade.AuthFacade;
@@ -49,8 +50,8 @@ public class AuthController {
     }
 
     @PostMapping("/user/author")
-    public ResponseEntity<?> stateAuthor(@RequestBody String email){
+    public ResponseEntity<?> stateAuthor(@RequestBody CreateUserAuthor createUserAuthor){
         log.info("User author start");
-        return authFacade.createAuthor(email);
+        return authFacade.createAuthor(createUserAuthor.getEmail());
     }
 }

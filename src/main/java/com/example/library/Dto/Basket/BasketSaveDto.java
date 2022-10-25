@@ -1,4 +1,4 @@
-package com.example.library.Dto.User;
+package com.example.library.Dto.Basket;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserGetDto {
+public class BasketSaveDto {
 
-    private Long id;
+    private Long userId;
 
-    private String userName;
+    private Long bookId;
 }
