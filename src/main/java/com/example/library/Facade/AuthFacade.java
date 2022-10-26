@@ -1,15 +1,13 @@
 package com.example.library.Facade;
 
 import com.example.library.Dto.Response.FactoryResponse.FactoryResponse;
-import com.example.library.Dto.Response.Imp.AuthResponse;
-import com.example.library.Dto.Response.Imp.Registration;
 import com.example.library.Dto.Response.ResponseDto;
 import com.example.library.Dto.User.AuthenticationDto;
 import com.example.library.Dto.User.RegistrationFto;
 import com.example.library.Entity.Role;
 import com.example.library.Entity.User;
 import com.example.library.Exeption.BadValues;
-import com.example.library.Exeption.FindDoulesException;
+import com.example.library.Exeption.FindDoublesException;
 import com.example.library.Exeption.NotFoundException;
 import com.example.library.Security.JwtTokenProvider;
 import com.example.library.Service.Imp.UserServiceImp;
@@ -52,7 +50,7 @@ public class AuthFacade {
     public ResponseEntity<?> registration(RegistrationFto registrationFto){
         if(userServiceImp.findEmail(registrationFto.getEmail())){
             log.debug("User found with this email {}", registrationFto.getEmail());
-            throw new FindDoulesException("User with this email, has already");
+            throw new FindDoublesException("User with this email, has already");
         }
         User user = new User();
         log.info("User creating");
@@ -69,7 +67,6 @@ public class AuthFacade {
     }
 
     public ResponseEntity<?> authorization(AuthenticationDto authenticationDto){
-        try {
             User user = userServiceImp.getUser(authenticationDto.getEmail());
             if(user == null){
                 log.info("User with email {}, not found", authenticationDto.getEmail());
@@ -83,10 +80,6 @@ public class AuthFacade {
             ResponseDto responseDto = factoryResponse.getResponse(user.getId(), token);
             log.info("Response created");
             return ResponseEntity.ok(responseDto);
-        }
-        catch (AuthenticationException e){
-            throw new BadValues(e.getMessage());
-        }
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response){

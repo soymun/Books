@@ -2,7 +2,7 @@ package com.example.library.Controllers;
 
 import com.example.library.Dto.Book.BookDto;
 import com.example.library.Dto.Book.BookDtoSave;
-import com.example.library.Dto.Response.FactoryResponse.FactoryResponse;
+import com.example.library.Dto.Response.ResponseDto;
 import com.example.library.Facade.BookFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +22,12 @@ public class BookController {
 
     private final BookFacade bookFacade;
 
-    private final FactoryResponse factoryResponse;
 
-    public BookController(BookFacade bookFacade, FactoryResponse factoryResponse) {
+    public BookController(BookFacade bookFacade) {
         this.bookFacade = bookFacade;
-        this.factoryResponse = factoryResponse;
     }
 
-    @GetMapping("/book/{id}")
+    @GetMapping("/book/file/{id}")
     public void getBook(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) throws IOException {
         log.info("Get file with id");
         BookDto bookDto = bookFacade.getBook(id);
@@ -72,4 +70,14 @@ public class BookController {
         log.info("Delete book in controller");
         return bookFacade.deleteBook(id);
     }
+
+    @GetMapping("/book/{id}")
+    public ResponseEntity<?> getAboutBook(@PathVariable Long id){
+        log.info("Get about book");
+        BookDto bookDto = bookFacade.getBook(id);
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setResponse(bookDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
 }

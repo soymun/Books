@@ -3,6 +3,7 @@ package com.example.library.Security;
 import com.example.library.Entity.Role;
 import com.example.library.Service.Imp.UserServiceImp;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
 
     private final UserServiceImp userServiceImp;
@@ -73,8 +75,9 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> jwtClaims = Jwts.parser().setSigningKey(security).parseClaimsJws(token);
             return !jwtClaims.getBody().getExpiration().before(new Date());
-        }catch (AuthenticationException e){
-            throw new RuntimeException(e.getMessage());
+        } catch (RuntimeException e){
+            log.error("Jwt invalid");
         }
+        return false;
     }
 }
