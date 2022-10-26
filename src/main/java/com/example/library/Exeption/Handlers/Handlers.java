@@ -55,6 +55,6 @@ public class Handlers {
         log.error("Runtime exception");
         ResponseDto responseDto = new ResponseDto();
         responseDto.setError(e.getMessage());
-        return new ResponseEntity<>(responseDto, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
 }
