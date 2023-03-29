@@ -1,13 +1,15 @@
 package com.example.library.Entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book {
@@ -30,4 +32,6 @@ public class Book {
     private Long price;
 
     private String urlToPdfFile;
+
+    private String urlToMainPhoto;
 }

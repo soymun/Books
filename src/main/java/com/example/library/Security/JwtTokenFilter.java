@@ -1,5 +1,7 @@
 package com.example.library.Security;
 
+import com.example.library.Dto.Security.PersonDetails;
+import com.example.library.Dto.Security.UserPrincipalData;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -13,10 +15,13 @@ import java.io.IOException;
 
 public class JwtTokenFilter extends GenericFilterBean {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
+    private final UserPrincipalData userPrincipalData;
+
+    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider, UserPrincipalData userPrincipalData) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userPrincipalData = userPrincipalData;
     }
 
     @Override
@@ -26,6 +31,10 @@ public class JwtTokenFilter extends GenericFilterBean {
             Authentication authentication = jwtTokenProvider.authentication(token);
             if(authentication != null){
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                PersonDetails personDetails = (PersonDetails) authentication.getDetails();
+                userPrincipalData.setId(personDetails.getId());
+                userPrincipalData.setUserName(personDetails.getUsername());
+                userPrincipalData.setRole(personDetails.getRole());
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);

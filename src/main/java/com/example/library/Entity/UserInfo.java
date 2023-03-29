@@ -12,23 +12,30 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Basket {
+public class UserInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
+
+    private String surname;
+
+    private String patronymic;
+
+    private String city;
+
+    private String street;
+
+    private String house;
+
+    private String phone;
 
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "book_id")
-    private Long bookId;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id", insertable = false, updatable = false)
-    private Book book;
 }

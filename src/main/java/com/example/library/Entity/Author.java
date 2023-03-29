@@ -19,13 +19,17 @@ public class Author {
     private Long id;
 
     @Column(name = "user_id")
-    private Long userAuthorId;
+    private Long userId;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private User userAuthor;
+    private User user;
 
-    private String nameAuthor;
+    private String name;
 
-    private String surnameAuthor;
+    private String surname;
+
+    private String patronymic;
+
+    private String urlToPhoto;
 }

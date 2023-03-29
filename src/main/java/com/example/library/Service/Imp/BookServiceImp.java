@@ -55,8 +55,8 @@ public class BookServiceImp implements BookService {
         Join<Book, Author> join = root.join(Book_.AUTHOR);
         cq.multiselect(
                 root.get(Book_.ID),
-                join.get(Author_.NAME_AUTHOR),
-                join.get(Author_.SURNAME_AUTHOR),
+                join.get(Author_.name),
+                join.get(Author_.surname),
                 root.get(Book_.NAME),
                 root.get(Book_.ABOUT),
                 root.get(Book_.PRICE),

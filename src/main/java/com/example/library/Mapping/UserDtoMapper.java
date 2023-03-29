@@ -1,6 +1,7 @@
 package com.example.library.Mapping;
 
-import com.example.library.Dto.MapObject.UserDto;
+import com.example.library.Dto.Security.RegistrationDto;
+import com.example.library.Dto.User.UserDto;
 import com.example.library.Entity.User;
 import org.mapstruct.Mapper;
 
@@ -8,4 +9,6 @@ import org.mapstruct.Mapper;
 public interface UserDtoMapper {
 
     UserDto userToUserDto(User user);
+
+    User registrationToUser(RegistrationDto registrationDto);
 }

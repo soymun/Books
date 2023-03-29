@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Basket {
+public class UserBooks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

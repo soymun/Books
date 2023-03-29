@@ -1,7 +1,7 @@
 package com.example.library.Dto.Response.FactoryResponse;
 
 import com.example.library.Dto.Book.BookDto;
-import com.example.library.Dto.MapObject.UserDto;
+import com.example.library.Dto.User.UserDto;
 import com.example.library.Dto.Author.AuthorDto;
 import com.example.library.Dto.Response.Imp.*;
 import com.example.library.Dto.Response.ResponseDto;

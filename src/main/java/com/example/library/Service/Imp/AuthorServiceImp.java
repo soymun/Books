@@ -43,8 +43,8 @@ public class AuthorServiceImp implements AuthorService {
         cq.where(cb.equal(root.get(Author_.ID), id));
         cq.multiselect(
                 root.get(Author_.ID),
-                root.get(Author_.NAME_AUTHOR),
-                root.get(Author_.SURNAME_AUTHOR)
+                root.get(Author_.name),
+                root.get(Author_.surname)
         );
         log.info("Get Author in service end");
         return entityManager.createQuery(cq).getSingleResult();
@@ -56,11 +56,11 @@ public class AuthorServiceImp implements AuthorService {
         CriteriaQuery<AuthorDto> cq = cb.createQuery(AuthorDto.class);
         Root<Author> root = cq.from(Author.class);
 
-        cq.where(cb.and(cb.equal(root.get(Author_.NAME_AUTHOR), name), cb.equal(root.get(Author_.SURNAME_AUTHOR), surname)));
+        cq.where(cb.and(cb.equal(root.get(Author_.name), name), cb.equal(root.get(Author_.surname), surname)));
         cq.multiselect(
                 root.get(Author_.ID),
-                root.get(Author_.NAME_AUTHOR),
-                root.get(Author_.SURNAME_AUTHOR)
+                root.get(Author_.name),
+                root.get(Author_.surname)
         );
         log.info("Get Author in service end");
         return entityManager.createQuery(cq).getSingleResult();
@@ -83,11 +83,11 @@ public class AuthorServiceImp implements AuthorService {
         CriteriaQuery<AuthorDto> cq = cb.createQuery(AuthorDto.class);
         Root<Author> root = cq.from(Author.class);
 
-        cq.where(cb.equal(root.get(Author_.USER_AUTHOR_ID), id));
+        cq.where(cb.equal(root.get(Author_.userId), id));
         cq.multiselect(
                 root.get(Author_.ID),
-                root.get(Author_.NAME_AUTHOR),
-                root.get(Author_.SURNAME_AUTHOR)
+                root.get(Author_.name),
+                root.get(Author_.surname)
         );
         log.info("Get Authors in service end");
         return entityManager.createQuery(cq).getResultList();

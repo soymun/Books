@@ -1,6 +1,6 @@
 package com.example.library.Facade;
 
-import com.example.library.Dto.MapObject.UserDto;
+import com.example.library.Dto.User.UserDto;
 import com.example.library.Dto.Response.FactoryResponse.FactoryResponse;
 import com.example.library.Dto.Response.ResponseDto;
 import com.example.library.Entity.User;
@@ -32,7 +32,7 @@ public class ProfileFacade {
             throw new BadValues("This profile, can't find");
         }
 
-        UserDto userDto = userServiceImp.getUserProfile(id);
+        UserDto userDto = userServiceImp.getUserById(id);
         if(userDto == null){
             log.debug("User with id {}, not found", id);
             throw new NotFoundException("User with id not found");
@@ -47,7 +47,7 @@ public class ProfileFacade {
             log.debug("User is null");
             throw new BadValues("This profile, can't find");
         }
-        User user = userServiceImp.getUserById(userDto.getId());
+        UserDto user = userServiceImp.getUserById(userDto.getId());
         if(user == null){
             log.debug("User with id {}, not found", userDto.getId());
             throw new NotFoundException("User with id not found");
@@ -56,13 +56,13 @@ public class ProfileFacade {
         User userUpdate = new User();
         userUpdate.setId(userDto.getId());
         userUpdate.setEmail(userDto.getEmail());
-        userUpdate.setUsername(userDto.getUsername());
-        userUpdate.setRole(user.getRole());
-        userUpdate.setPassword(user.getPassword());
-        UserDto userSaved = userServiceImp.saveUser(userUpdate);
-        ResponseDto responseDto = factoryResponse.getResponse(userSaved);
-        log.info("User update end");
-        return ResponseEntity.ok(responseDto);
+        userUpdate.setUserName(userDto.getUsername());
+//        userUpdate.setRole(user.getRole());
+//        userUpdate.setPassword(user.getPassword());
+//        UserDto userSaved = userServiceImp.saveUser(userUpdate);
+//        ResponseDto responseDto = factoryResponse.getResponse(userSaved);
+//        log.info("User update end");
+        return ResponseEntity.ok(null);
     }
 
     public ResponseEntity<?> deleteUser(Long id){

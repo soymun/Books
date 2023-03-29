@@ -3,6 +3,9 @@ package com.example.library.Service.Imp;
 import com.example.library.Dto.Basket.BasketSaveDto;
 import com.example.library.Dto.Book.BookDtoGetAll;
 import com.example.library.Entity.*;
+import com.example.library.Entity.Author_;
+import com.example.library.Entity.Basket_;
+import com.example.library.Entity.Book_;
 import com.example.library.Reposiroties.BasketRepository;
 import com.example.library.Service.BasketService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +43,8 @@ public class BasketServiceImp implements BasketService {
 
         cq.multiselect(
                 join.get(Book_.ID),
-                join2.get(Author_.NAME_AUTHOR),
-                join2.get(Author_.SURNAME_AUTHOR),
+                join2.get(Author_.name),
+                join2.get(Author_.surname),
                 join.get(Book_.NAME),
                 join.get(Book_.ABOUT),
                 join.get(Book_.PRICE)

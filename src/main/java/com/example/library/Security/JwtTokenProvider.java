@@ -2,13 +2,15 @@ package com.example.library.Security;
 
 import com.example.library.Entity.Role;
 import com.example.library.Service.Imp.UserServiceImp;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -75,9 +77,8 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> jwtClaims = Jwts.parser().setSigningKey(security).parseClaimsJws(token);
             return !jwtClaims.getBody().getExpiration().before(new Date());
-        } catch (RuntimeException e){
-            log.error("Jwt invalid");
+        } catch (Exception e){
+            return false;
         }
-        return false;
     }
 }
