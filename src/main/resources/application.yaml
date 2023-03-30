@@ -15,3 +15,5 @@ jwt:
   provider:
     security: soymun
     validate: 3600000
+content:
+  url: D:\Users\проекты\books\src\main\resources\files

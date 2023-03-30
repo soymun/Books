@@ -2,75 +2,63 @@ package com.example.library.Facade;
 
 
 import com.example.library.Dto.Book.BookDto;
-import com.example.library.Dto.Book.BookDtoSave;
-import com.example.library.Dto.Response.FactoryResponse.FactoryResponse;
-import com.example.library.Dto.Response.ResponseDto;
+import com.example.library.Dto.Book.BookUpdateDto;
 import com.example.library.Exeption.NotFoundException;
 import com.example.library.Service.Imp.BookServiceImp;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class BookFacade {
 
     private final BookServiceImp bookServiceImp;
 
-    private final FactoryResponse factoryResponse;
+    public ResponseEntity<?> saveBook(BookDto bookDtoSave){
 
-    @Autowired
-    public BookFacade(BookServiceImp bookServiceImp, FactoryResponse factoryResponse) {
-        this.bookServiceImp = bookServiceImp;
-        this.factoryResponse = factoryResponse;
-    }
-
-    public ResponseEntity<?> saveBook(BookDtoSave bookDtoSave, MultipartFile multipartFile) throws IOException {
         if(bookDtoSave == null){
-            log.debug("Book is null");
-            throw new NotFoundException("Book with this name, can not save");
+            throw new NotFoundException("Book can not save");
         }
 
-        log.info("Start save book");
-        BookDto bookDto = bookServiceImp.saveBook(bookDtoSave, multipartFile);
-        log.info("End save book");
-        return ResponseEntity.ok(factoryResponse.getResponse(bookDto));
+        bookServiceImp.saveBook(bookDtoSave);
+
+        return ResponseEntity.status(201).build();
     }
 
-    public ResponseEntity<?> updateBook(BookDto bookDto){
+    public ResponseEntity<?> updateBook(BookUpdateDto bookDto){
         if(bookDto == null){
-            log.debug("Book is null");
-            throw new NotFoundException("Book with this id, can not save");
+            throw new NotFoundException("Book can not save");
         }
-        log.info("Start update book");
-        BookDto bookDtoUpdate = bookServiceImp.updateBook(bookDto);
-        log.info("End update book");
-        return ResponseEntity.ok(factoryResponse.getResponse(bookDtoUpdate));
+
+        return ResponseEntity.ok(bookServiceImp.updateBook(bookDto));
     }
 
     public ResponseEntity<?> deleteBook(Long id){
         if(id == null){
-            log.debug("Id is null");
-            throw new NotFoundException("Book with this id, not found");
+            throw new NotFoundException("Book not found");
         }
-        log.info("Start delete book");
+
         bookServiceImp.deleteBook(id);
-        log.info("End delete book");
-        return ResponseEntity.ok(factoryResponse.getResponse("Delete suggest"));
+
+        return ResponseEntity.noContent().build();
     }
 
-    public BookDto getBook(Long id){
+    public ResponseEntity<?> getBook(Long id){
         if(id == null){
-            log.debug("Id is null");
             throw new NotFoundException("Book with this id, not found");
         }
-        log.info("Start get book");
-        BookDto bookDto = bookServiceImp.getBook(id);
-        log.info("End get book");
-        return bookDto;
+
+        return ResponseEntity.ok(bookServiceImp.getBookById(id));
+    }
+
+    public ResponseEntity<?> getBookByName(String name){
+        return ResponseEntity.ok(bookServiceImp.getBookByName(name));
+    }
+
+    public ResponseEntity<?> getBookByAuthorId(Long authorId){
+        return ResponseEntity.ok(bookServiceImp.getBookByAuthorId(authorId));
     }
 }

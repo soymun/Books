@@ -1,13 +1,9 @@
 package com.example.library.Dto.Book;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BookDto {
+public class BookUpdateDto {
 
     private Long id;
 

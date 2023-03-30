@@ -1,10 +1,9 @@
 package com.example.library.Dto.Response.FactoryResponse;
 
-import com.example.library.Dto.Book.BookDto;
-import com.example.library.Dto.User.UserDto;
 import com.example.library.Dto.Author.AuthorDto;
 import com.example.library.Dto.Response.Imp.*;
 import com.example.library.Dto.Response.ResponseDto;
+import com.example.library.Dto.User.UserDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,16 +28,6 @@ public class FactoryResponse {
         responseDto.setResponse(profileDto);
         return responseDto;
     }
-
-    public ResponseDto getResponse(Long id, String token){
-        ResponseDto responseDto = new ResponseDto();
-        AuthResponse profileDto = new AuthResponse();
-        profileDto.setToken(token);
-        profileDto.setId(id);
-        responseDto.setResponse(profileDto);
-        return responseDto;
-    }
-
     public ResponseDto getResponse(AuthorDto authorDto){
         ResponseDto responseDto = new ResponseDto();
         AuthorResponse authorResponse = new AuthorResponse();
@@ -54,19 +43,6 @@ public class FactoryResponse {
         AuthorListResponse authorResponse = new AuthorListResponse();
         authorResponse.setAuthorDtos(authorDto);
         responseDto.setResponse(authorResponse);
-        return responseDto;
-    }
-
-    public ResponseDto getResponse(BookDto bookDto){
-        ResponseDto responseDto = new ResponseDto();
-        BookResponse bookResponse = new BookResponse();
-        bookResponse.setId(bookDto.getId());
-        bookResponse.setName(bookDto.getName());
-        bookResponse.setAuthorName(bookDto.getAuthorName());
-        bookResponse.setAuthorSurname(bookDto.getAuthorSurname());
-        bookResponse.setAbout(bookDto.getAbout());
-        bookResponse.setPrice(bookDto.getPrice());
-        responseDto.setResponse(bookResponse);
         return responseDto;
     }
 }
