@@ -7,13 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthorCreateUpdateDto {
+public class AuthorCreateDto {
 
     private Long id;
 
-    private Long userAuthorId;
+    private Long userId;
 
-    private String nameAuthor;
+    private String name;
 
-    private String surnameAuthor;
+    private String surname;
+
+    private String patronymic;
 }

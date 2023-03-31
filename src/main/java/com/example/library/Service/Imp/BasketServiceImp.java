@@ -1,15 +1,16 @@
 package com.example.library.Service.Imp;
 
+import com.example.library.Dto.Basket.BasketDto;
 import com.example.library.Dto.Basket.BasketSaveDto;
-import com.example.library.Dto.Book.BookDtoGetAll;
 import com.example.library.Entity.*;
-import com.example.library.Entity.Author_;
 import com.example.library.Entity.Basket_;
 import com.example.library.Entity.Book_;
 import com.example.library.Reposiroties.BasketRepository;
 import com.example.library.Service.BasketService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BasketServiceImp implements BasketService {
 
     private final BasketRepository basketRepository;
@@ -28,43 +30,52 @@ public class BasketServiceImp implements BasketService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public BasketServiceImp(BasketRepository basketRepository) {
-        this.basketRepository = basketRepository;
-    }
-
     @Override
-    public List<BookDtoGetAll> getAllByUserId(Long id) {
+    public List<Long> getBasketsByUserId(Long id) {
+        log.info("Get book on user with id {}", id);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<BookDtoGetAll> cq = cb.createQuery(BookDtoGetAll.class);
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<Basket> root = cq.from(Basket.class);
         Join<Basket, Book> join = root.join(Basket_.BOOK);
-        Join<Book, Author> join2 = join.join(Book_.AUTHOR);
+
         cq.where(cb.equal(root.get(Basket_.USER_ID), id));
 
         cq.multiselect(
-                join.get(Book_.ID),
-                join2.get(Author_.name),
-                join2.get(Author_.surname),
-                join.get(Book_.NAME),
-                join.get(Book_.ABOUT),
-                join.get(Book_.PRICE)
+                join.get(Book_.ID)
         );
-        log.info("Get book on user id");
         return entityManager.createQuery(cq).getResultList();
     }
 
     @Override
+    public BasketDto getBasketById(Long id) {
+        log.info("Get book with id {}", id);
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BasketDto> cq = cb.createQuery(BasketDto.class);
+        Root<Basket> root = cq.from(Basket.class);
+
+        cq.where(cb.equal(root.get(Basket_.USER_ID), id));
+
+        cq.multiselect(
+                root.get(Basket_.id),
+                root.get(Basket_.bookId),
+                root.get(Basket_.userId)
+        );
+        return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    @Override
     public void saveBasket(BasketSaveDto basketSaveDto) {
+        log.info("Save basket");
         Basket basket = new Basket();
         basket.setUserId(basketSaveDto.getUserId());
         basket.setBookId(basketSaveDto.getBookId());
         basketRepository.save(basket);
-        log.info("Save basket");
     }
 
     @Override
+    @Transactional
     public void deleteBasket(Long basketId) {
-        log.info("Delete basket");
+        log.info("Delete basket with id {}", basketId);
         basketRepository.deleteById(basketId);
     }
 }

@@ -1,7 +1,10 @@
 package com.example.library.Facade;
 
+import com.example.library.Dto.Author.AuthorDto;
+import com.example.library.Dto.Author.AuthorUpdateDto;
 import com.example.library.Dto.Book.BookDto;
 import com.example.library.Dto.Book.BookUpdateDto;
+import com.example.library.Service.Imp.AuthorServiceImp;
 import com.example.library.Service.Imp.BookServiceImp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,8 @@ public class FileFacade {
     private String url;
 
     private final BookServiceImp bookServiceImp;
+
+    private final AuthorServiceImp authorServiceImp;
 
     public void saveBookFile(Long id, MultipartFile photo, MultipartFile pdf) throws IOException {
 
@@ -51,6 +56,22 @@ public class FileFacade {
         bookServiceImp.updateBook(bookUpdateDto);
     }
 
+    public void saveAuthorFile(Long authorId, MultipartFile author) throws IOException {
+        AuthorUpdateDto authorUpdateDto = new AuthorUpdateDto();
+        authorUpdateDto.setId(authorId);
+
+        File fileAuthor = new File(url + author.getOriginalFilename());
+        if (fileAuthor.createNewFile()) {
+            byte[] bytes = author.getBytes();
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(fileAuthor));
+            stream.write(bytes);
+            stream.close();
+            authorUpdateDto.setUrlToPhoto(fileAuthor.getAbsolutePath());
+        }
+
+        authorServiceImp.updateAuthor(authorUpdateDto);
+    }
+
     public void updateBookFiles(Long id, MultipartFile photo, MultipartFile pdf) throws IOException {
         BookDto bookDto = bookServiceImp.getBookById(id);
         updateBook(pdf, bookDto.getUrlToPdfFile());
@@ -60,6 +81,12 @@ public class FileFacade {
     public void getPdfByBookId(HttpServletRequest request, HttpServletResponse response, Long bookId) throws IOException {
         BookDto bookDto = bookServiceImp.getBookById(bookId);
         File file = new File(bookDto.getUrlToPdfFile());
+        setFile(file, response);
+    }
+
+    public void getPhotoByAuthorId(HttpServletRequest request, HttpServletResponse response, Long authorId) throws IOException {
+        AuthorDto authorDto = authorServiceImp.getAuthor(authorId);
+        File file = new File(authorDto.getUrlToPhoto());
         setFile(file, response);
     }
 

@@ -25,6 +25,13 @@ public class FileControllers {
         return ResponseEntity.status(201).build();
     }
 
+    @PostMapping("/author/file")
+    public ResponseEntity<?> saveAuthorFile(@RequestParam Long id,
+                                      @RequestParam MultipartFile author) throws IOException {
+        fileFacade.saveAuthorFile(id, author);
+        return ResponseEntity.status(201).build();
+    }
+
     @PatchMapping("/file")
     public ResponseEntity<?> updateFile(@RequestParam Long id,
                                       @RequestParam(required = false) MultipartFile pdf,
@@ -41,5 +48,10 @@ public class FileControllers {
     @GetMapping("/file/photo")
     public void getPhoto(@RequestParam Long bookId,HttpServletRequest request, HttpServletResponse response) throws IOException {
         fileFacade.getMainPhotoByBookId(request, response, bookId);
+    }
+
+    @GetMapping("/author/file/photo")
+    public void getAuthorPhoto(@RequestParam Long authorId,HttpServletRequest request, HttpServletResponse response) throws IOException {
+        fileFacade.getPhotoByAuthorId(request, response, authorId);
     }
 }

@@ -1,7 +1,8 @@
 package com.example.library.Service;
 
-import com.example.library.Dto.Author.AuthorCreateUpdateDto;
+import com.example.library.Dto.Author.AuthorCreateDto;
 import com.example.library.Dto.Author.AuthorDto;
+import com.example.library.Dto.Author.AuthorUpdateDto;
 
 import java.util.List;
 
@@ -9,11 +10,13 @@ public interface AuthorService {
 
     AuthorDto getAuthor(Long id);
 
-    AuthorDto updateAuthor(AuthorCreateUpdateDto authorDto);
+    AuthorDto updateAuthor(AuthorUpdateDto authorDto);
 
-    List<AuthorDto> getAuthorByUserId(Long id);
+    List<AuthorDto> getAuthor(String name, String surname, String patronymic);
 
-    AuthorDto saveAuthor(AuthorCreateUpdateDto authorCreateUpdateDto);
+    AuthorDto getAuthorByUserId(Long id);
+
+    void saveAuthor(AuthorCreateDto authorCreateUpdateDto);
 
     void deleteAuthor(Long id);
 }

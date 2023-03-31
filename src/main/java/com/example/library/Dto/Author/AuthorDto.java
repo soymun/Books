@@ -15,4 +15,8 @@ public class AuthorDto {
     private String nameAuthor;
 
     private String surnameAuthor;
+
+    private String patronymic;
+
+    private String urlToPhoto;
 }

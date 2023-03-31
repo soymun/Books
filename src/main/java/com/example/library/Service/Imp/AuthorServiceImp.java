@@ -1,14 +1,18 @@
 package com.example.library.Service.Imp;
 
-import com.example.library.Dto.Author.AuthorCreateUpdateDto;
+import com.example.library.Dto.Author.AuthorCreateDto;
 import com.example.library.Dto.Author.AuthorDto;
+import com.example.library.Dto.Author.AuthorUpdateDto;
 import com.example.library.Entity.Author;
 import com.example.library.Entity.Author_;
+import com.example.library.Exeption.NotFoundException;
 import com.example.library.Mapping.AuthorMapper;
 import com.example.library.Reposiroties.AuthorRepository;
 import com.example.library.Service.AuthorService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,6 +24,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthorServiceImp implements AuthorService {
 
     private final AuthorRepository authorRepository;
@@ -28,85 +33,96 @@ public class AuthorServiceImp implements AuthorService {
     @PersistenceContext
     EntityManager entityManager;
 
-    public AuthorServiceImp(AuthorRepository authorRepository, AuthorMapper authorMapper) {
-        this.authorRepository = authorRepository;
-        this.authorMapper = authorMapper;
-    }
-
     @Override
     public AuthorDto getAuthor(Long id) {
-        log.info("Get Author in service started");
+        log.info("Get Author with id {}", id);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<AuthorDto> cq = cb.createQuery(AuthorDto.class);
         Root<Author> root = cq.from(Author.class);
 
         cq.where(cb.equal(root.get(Author_.ID), id));
         cq.multiselect(
-                root.get(Author_.ID),
+                root.get(Author_.id),
                 root.get(Author_.name),
-                root.get(Author_.surname)
+                root.get(Author_.surname),
+                root.get(Author_.patronymic),
+                root.get(Author_.urlToPhoto)
         );
-        log.info("Get Author in service end");
         return entityManager.createQuery(cq).getSingleResult();
     }
 
-    public AuthorDto getAuthor(String name, String surname) {
-        log.info("Get Author in service started");
+    @Override
+    public List<AuthorDto> getAuthor(String name, String surname, String patronymic) {
+        log.info("Get Author with name {} and surname {} and patronymic {}", name, surname, patronymic);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<AuthorDto> cq = cb.createQuery(AuthorDto.class);
         Root<Author> root = cq.from(Author.class);
 
-        cq.where(cb.and(cb.equal(root.get(Author_.name), name), cb.equal(root.get(Author_.surname), surname)));
+        cq.where(cb.and(cb.equal(root.get(Author_.patronymic), patronymic), cb.equal(root.get(Author_.name), name), cb.equal(root.get(Author_.surname), surname)));
         cq.multiselect(
-                root.get(Author_.ID),
+                root.get(Author_.id),
                 root.get(Author_.name),
-                root.get(Author_.surname)
+                root.get(Author_.surname),
+                root.get(Author_.patronymic),
+                root.get(Author_.urlToPhoto)
         );
-        log.info("Get Author in service end");
-        return entityManager.createQuery(cq).getSingleResult();
+
+        return entityManager.createQuery(cq).getResultList();
     }
 
     @Override
-    public AuthorDto updateAuthor(AuthorCreateUpdateDto authorDto) {
-        log.info("Update author started");
-        Author author = authorMapper.authorCreateUpdateDtoToAuthor(authorDto);
+    public AuthorDto updateAuthor(AuthorUpdateDto authorDto) {
+        log.info("Update author with id {}", authorDto.getId());
+        Author author = authorRepository.findById(authorDto.getId()).orElseThrow(() -> new NotFoundException("Автор не найден"));
+        if(authorDto.getName() != null){
+            author.setName(authorDto.getName());
+        }
 
-        AuthorDto authorDto1 = authorMapper.authorToAuthorDto(authorRepository.save(author));
-        log.info("Update author end");
-        return authorDto1;
+        if(authorDto.getSurname() != null){
+            author.setSurname(authorDto.getSurname());
+        }
+
+        if(authorDto.getPatronymic() != null){
+            author.setPatronymic(authorDto.getPatronymic());
+        }
+
+        if(authorDto.getUrlToPhoto() != null){
+            author.setUrlToPhoto(authorDto.getUrlToPhoto());
+        }
+        return authorMapper.authorToAuthorDto(authorRepository.save(author));
     }
 
     @Override
-    public List<AuthorDto> getAuthorByUserId(Long id) {
-        log.info("Get Authors in service started");
+    public AuthorDto getAuthorByUserId(Long id) {
+        log.info("Get Authors by user id {}", id);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<AuthorDto> cq = cb.createQuery(AuthorDto.class);
         Root<Author> root = cq.from(Author.class);
 
         cq.where(cb.equal(root.get(Author_.userId), id));
         cq.multiselect(
-                root.get(Author_.ID),
+                root.get(Author_.id),
                 root.get(Author_.name),
-                root.get(Author_.surname)
+                root.get(Author_.surname),
+                root.get(Author_.patronymic),
+                root.get(Author_.urlToPhoto)
         );
-        log.info("Get Authors in service end");
-        return entityManager.createQuery(cq).getResultList();
+
+        return entityManager.createQuery(cq).getSingleResult();
     }
 
     @Override
-    public AuthorDto saveAuthor(AuthorCreateUpdateDto authorCreateUpdateDto) {
+    @Transactional
+    public void saveAuthor(AuthorCreateDto authorCreateUpdateDto) {
         log.info("Update author started");
-        Author author = authorMapper.authorCreateUpdateDtoToAuthor(authorCreateUpdateDto);
 
-        AuthorDto authorDto1 = authorMapper.authorToAuthorDto(authorRepository.save(author));
-        log.info("Update author end");
-        return authorDto1;
+        authorRepository.save(authorMapper.authorCreateDtoToAuthor(authorCreateUpdateDto));
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(Long id) {
-        log.info("Delete author started");
+        log.info("Delete author with id {}", id);
         authorRepository.deleteById(id);
-        log.info("Delete author end");
     }
 }

@@ -1,7 +1,8 @@
 package com.example.library.Controllers;
 
 
-import com.example.library.Dto.Author.AuthorCreateUpdateDto;
+import com.example.library.Dto.Author.AuthorCreateDto;
+import com.example.library.Dto.Author.AuthorUpdateDto;
 import com.example.library.Facade.AuthorFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,14 @@ public class AuthorController {
         return authorFacade.getAuthor(id);
     }
 
-    @GetMapping("/author/{name}/{surname}")
-    public ResponseEntity<?> getAuthorById(@PathVariable String name, @PathVariable String surname){
+    @GetMapping("/author")
+    public ResponseEntity<?> getAuthorById(@RequestParam String name, @RequestParam String surname, @RequestParam String patronymic){
         log.info("Author get with name and surname");
-        return authorFacade.getAuthor(name, surname);
+        return authorFacade.getAuthor(name, surname,patronymic);
     }
 
     @PutMapping("/author")
-    public ResponseEntity<?> updateAuthor(@RequestBody AuthorCreateUpdateDto authorCreateUpdateDto){
+    public ResponseEntity<?> updateAuthor(@RequestBody AuthorUpdateDto authorCreateUpdateDto){
         log.info("Author update");
         return authorFacade.updateAuthor(authorCreateUpdateDto);
     }
@@ -43,7 +44,7 @@ public class AuthorController {
     }
 
     @PostMapping("/author")
-    public ResponseEntity<?> saveAuthor(@RequestBody AuthorCreateUpdateDto authorCreateUpdateDto){
+    public ResponseEntity<?> saveAuthor(@RequestBody AuthorCreateDto authorCreateUpdateDto){
         log.info("Author save");
         return authorFacade.saveAuthor(authorCreateUpdateDto);
     }
