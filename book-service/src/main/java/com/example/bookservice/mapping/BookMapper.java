@@ -1,6 +1,7 @@
 package com.example.bookservice.mapping;
 
 import com.example.bookservice.entity.Book;
+import com.example.bookservice.model.Author.Author;
 import com.example.bookservice.model.Book.BookDto;
 import org.mapstruct.Mapper;
 

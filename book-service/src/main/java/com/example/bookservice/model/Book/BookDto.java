@@ -1,5 +1,6 @@
 package com.example.bookservice.model.Book;
 
+import com.example.bookservice.model.Author.Author;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ public class BookDto {
 
     private Long id;
 
-    private Long authorId;
+    private Author author;
 
     private String name;
 

@@ -7,8 +7,6 @@ public class BookUpdateDto {
 
     private Long id;
 
-    private Long authorId;
-
     private String name;
 
     private String about;

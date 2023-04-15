@@ -1,5 +1,6 @@
 package com.example.bookservice.model.Book;
 
+import com.example.bookservice.model.Author.Author;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,7 @@ import lombok.NoArgsConstructor;
 public class BookDtoGetAll {
     private Long id;
 
-    private String authorName;
-
-    private String authorSurname;
+    private Author author;
 
     private String name;
 

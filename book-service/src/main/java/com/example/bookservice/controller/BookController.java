@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/book/v1")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -35,7 +35,8 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public ResponseEntity<?> getBook(@RequestParam(required = false) String bookName, @RequestParam(required = false) Long authorId){
+    public ResponseEntity<?> getBook(@RequestParam(required = false) String bookName,
+                                     @RequestParam(required = false) Long authorId){
         if(bookName != null){
             return bookFacade.getBookByName(bookName);
         }
