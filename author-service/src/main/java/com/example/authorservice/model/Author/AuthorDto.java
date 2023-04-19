@@ -1,15 +1,14 @@
-package com.example.bookservice.model.Author;
+package com.example.authorservice.model.Author;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Author extends RepresentationModel<Author> {
+public class AuthorDto {
 
     private Long id;
 
@@ -18,4 +17,6 @@ public class Author extends RepresentationModel<Author> {
     private String surnameAuthor;
 
     private String patronymicAuthor;
+
+    private String urlToPhoto;
 }

@@ -5,6 +5,7 @@ import com.example.bookservice.entity.Book;
 import com.example.bookservice.mapping.BookMapper;
 import com.example.bookservice.model.Author.Author;
 import com.example.bookservice.model.Book.BookDto;
+import com.example.bookservice.model.Book.BookDtoSave;
 import com.example.bookservice.model.Book.BookUpdateDto;
 import com.example.bookservice.repository.BookRepository;
 import com.example.bookservice.service.BookService;
@@ -65,7 +66,7 @@ public class BookServiceImp implements BookService {
 
     @Override
     @Transactional
-    public void saveBook(BookDto bookDto) {
+    public void saveBook(BookDtoSave bookDto) {
         log.info("Save book");
         bookRepository.save(bookMapper.bookDtoToBook(bookDto));
     }
@@ -106,7 +107,7 @@ public class BookServiceImp implements BookService {
 
     private Author getAuthor(Long authorId){
         Author author = new Author();
-        author.setAuthorId(authorId);
+        author.setId(authorId);
         return author;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.bookservice.service;
 
 import com.example.bookservice.model.Book.BookDto;
+import com.example.bookservice.model.Book.BookDtoSave;
 import com.example.bookservice.model.Book.BookUpdateDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +14,8 @@ public interface BookService {
 
     BookDto updateBook(BookUpdateDto bookDto);
 
-    void saveBook(BookDto bookDto) throws IOException;
+    @Transactional
+    void saveBook(BookDtoSave bookDto);
 
     void deleteBook(Long id);
 

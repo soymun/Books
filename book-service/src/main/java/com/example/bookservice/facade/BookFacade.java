@@ -1,13 +1,18 @@
 package com.example.bookservice.facade;
 
 
+import com.example.bookservice.filters.SecurityTokenContext;
 import com.example.bookservice.model.Author.Author;
 import com.example.bookservice.model.Book.BookDto;
+import com.example.bookservice.model.Book.BookDtoSave;
 import com.example.bookservice.model.Book.BookUpdateDto;
 import com.example.bookservice.service.impl.BookServiceImp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -20,10 +25,12 @@ public class BookFacade {
 
     private final BookServiceImp bookServiceImp;
 
+    private final SecurityTokenContext securityTokenContext;
+
     @LoadBalanced
     private final RestTemplate restTemplate;
 
-    public ResponseEntity<?> saveBook(BookDto bookDtoSave) {
+    public ResponseEntity<?> saveBook(BookDtoSave bookDtoSave) {
 
         if (bookDtoSave == null) {
             throw new RuntimeException("Book can not save");
@@ -41,7 +48,7 @@ public class BookFacade {
 
         BookDto updatedBook = bookServiceImp.updateBook(bookDto);
 
-        updatedBook.setAuthor(getAuthor(updatedBook.getAuthor().getAuthorId()).getBody());
+        updatedBook.setAuthor(getAuthor(updatedBook.getAuthor().getId()).getBody());
 
         return ResponseEntity.ok(updatedBook);
     }
@@ -63,7 +70,7 @@ public class BookFacade {
 
         BookDto getBook = bookServiceImp.getBookById(id);
 
-        getBook.setAuthor(getAuthor(getBook.getAuthor().getAuthorId()).getBody());
+        getBook.setAuthor(getAuthor(getBook.getAuthor().getId()).getBody());
 
         return ResponseEntity.ok(getBook);
     }
@@ -71,21 +78,24 @@ public class BookFacade {
     public ResponseEntity<?> getBookByName(String name) {
         return ResponseEntity.ok(bookServiceImp.getBookByName(name)
                 .stream()
-                .peek(bookDto -> bookDto.setAuthor(getAuthor(bookDto.getAuthor().getAuthorId()).getBody()))
+                .peek(bookDto -> bookDto.setAuthor(getAuthor(bookDto.getAuthor().getId()).getBody()))
                 .toList());
     }
 
     public ResponseEntity<?> getBookByAuthorId(Long authorId) {
         return ResponseEntity.ok(bookServiceImp.getBookByAuthorId(authorId)
                 .stream()
-                .peek(bookDto -> bookDto.setAuthor(getAuthor(bookDto.getAuthor().getAuthorId()).getBody()))
+                .peek(bookDto -> bookDto.setAuthor(getAuthor(bookDto.getAuthor().getId()).getBody()))
                 .toList());
     }
 
     private ResponseEntity<Author> getAuthor(Long authorId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", securityTokenContext.getToken());
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
         return restTemplate.exchange(
-                "http://gateway:8072/authorservice/v1/author/{authorId}",
-                HttpMethod.GET,
-                null, Author.class, authorId);
+                "http://localhost:8072/author/v1/author/{authorId}",
+                HttpMethod.GET, request, Author.class, authorId);
     }
 }

@@ -1,9 +1,9 @@
 spring:
   application:
-    name: book-service
+    name: author-service
   cloud:
     config:
       #configserver
       uri: http://localhost:8071
 server:
-  port: 8081
+  port: 8082

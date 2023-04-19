@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BookDtoSave {
 
-    private Long id;
-
-    private Author author;
+    private Long authorId;
 
     private String name;
 
