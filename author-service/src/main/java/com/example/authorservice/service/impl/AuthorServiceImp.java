@@ -67,7 +67,7 @@ public class AuthorServiceImp implements AuthorService {
     public AuthorDto getAuthorByUserId(Long id) {
         log.info("Get Authors by user id {}", id);
 
-        return authorMapper.authorToAuthorDto(authorRepository.getAuthorByUserId(id).orElseThrow(() -> new RuntimeException("Автор не был найден")));
+        return authorMapper.authorToAuthorDto(authorRepository.getAuthorByAccountId(id).orElseThrow(() -> new RuntimeException("Автор не был найден")));
     }
 
     @Override

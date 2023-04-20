@@ -1,22 +1,21 @@
 package com.example.bookservice.filters;
 
-import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
-import java.util.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SecurityTokenContext {
 
-    private ThreadLocal<String> token;
+    public HttpEntity<String> getToken(){
+        Jwt principal = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    public void setToken(String token){
-        ThreadLocal<String> threadLocalToken = new ThreadLocal<>();
-        threadLocalToken.set(token);
-        this.token = threadLocalToken;
-    }
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " +  principal.getTokenValue());
 
-    public String getToken(){
-        return token.get();
+        return new HttpEntity<>(headers);
     }
 }

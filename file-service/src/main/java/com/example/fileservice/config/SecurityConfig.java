@@ -1,8 +1,11 @@
-package com.example.bookservice.config;
+package com.example.fileservice.config;
 
+import com.example.fileservice.filters.SecurityFilterRestBuilder;
+import com.example.fileservice.filters.SecurityTokenContext;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,8 +22,10 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class SecurityConfig{
+
+    @Autowired
+    private SecurityTokenContext securityTokenContext;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -29,7 +34,8 @@ public class SecurityConfig{
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.decoder(jwtDecoder())
-                        ));
+                        ))
+                .apply(new SecurityFilterRestBuilder(securityTokenContext));
         return http.build();
     }
 
@@ -39,13 +45,8 @@ public class SecurityConfig{
     }
 
     @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public KeycloakRestTemplate keycloakRestTemplate(KeycloakClientRequestFactory requestFactory) {
-        return new KeycloakRestTemplate(requestFactory);
-    }
-
-    @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 }
+

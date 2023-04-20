@@ -9,10 +9,7 @@ import com.example.bookservice.model.Book.BookUpdateDto;
 import com.example.bookservice.service.impl.BookServiceImp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -90,12 +87,8 @@ public class BookFacade {
     }
 
     private ResponseEntity<Author> getAuthor(Long authorId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", securityTokenContext.getToken());
-
-        HttpEntity<String> request = new HttpEntity<>(headers);
         return restTemplate.exchange(
                 "http://localhost:8072/author/v1/author/{authorId}",
-                HttpMethod.GET, request, Author.class, authorId);
+                HttpMethod.GET, securityTokenContext.getToken(), Author.class, authorId);
     }
 }
