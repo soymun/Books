@@ -11,7 +11,7 @@ public class AuthorCreateDto {
 
     private Long id;
 
-    private Long userId;
+    private Long accountId;
 
     private String nameAuthor;
 
